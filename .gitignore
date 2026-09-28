@@ -1,0 +1,4 @@
+.costcheck/
+__pycache__/
+*.pyc
+.venv/
