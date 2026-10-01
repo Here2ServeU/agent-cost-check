@@ -5,15 +5,15 @@ import costcheck
 # import anthropic; client = anthropic.Anthropic()
 
 def handle_invoice(client, path: str) -> dict | None:
-    with costcheck.run(task=path, model="claude-sonnet", agent="invoice-reader", team="finance-ops") as r:
+    with costcheck.run(task=path) as r:              # one task = one run
         result = None
         for _ in range(10):                         # your existing agent loop
             resp = client.messages.create(
-                model="claude-3-5-sonnet-20241022",
+                model="claude-sonnet-5-5",
                 max_tokens=1024,
                 messages=[{"role": "user", "content": f"Extract the total from {path}"}],
             )
-            r.record(resp)                          # <- reads resp.usage for you
+            r.record(resp)                          # <- reads tokens and model for you
             result = parse(resp)
             if result:
                 break

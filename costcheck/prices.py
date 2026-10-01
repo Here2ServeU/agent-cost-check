@@ -25,8 +25,9 @@ PRICES: dict[str, dict[str, float]] = {
     "default":       {"input": 3.00,  "output": 15.00},
 }
 
-# Substring matching, longest first, so "claude-3-5-sonnet-20241022" finds
-# "claude-sonnet" without you having to maintain every dated model id.
+# Substring matching, so "claude-3-5-sonnet-20241022" finds "claude-sonnet"
+# without you having to maintain every dated model id. Order matters: the
+# more specific name goes first ("gpt-4o-mini" before "gpt-4o").
 _ALIASES = [
     ("haiku", "claude-haiku"), ("sonnet", "claude-sonnet"), ("opus", "claude-opus"),
     ("gpt-4o-mini", "gpt-4o-mini"), ("4o-mini", "gpt-4o-mini"), ("gpt-4o", "gpt-4o"),
@@ -41,7 +42,7 @@ def resolve(model: str) -> tuple[str, bool]:
     m = model.lower()
     if m in PRICES:
         return m, True
-    for needle, key in sorted(_ALIASES, key=lambda a: -len(a[0])):
+    for needle, key in _ALIASES:
         if needle in m:
             return key, True
     return "default", False

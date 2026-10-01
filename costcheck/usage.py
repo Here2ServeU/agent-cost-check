@@ -47,3 +47,9 @@ def extract(obj: Any) -> tuple[int, int]:
         f"  what it saw: {keys[:12]}\n"
         "  fix: pass the numbers directly, e.g. r.record(input_tokens=1200, output_tokens=300)"
     )
+
+
+def model_name(obj: Any) -> str | None:
+    """The model id a response says it came from, if it says one."""
+    name = _get(obj, "model") if obj is not None else None
+    return name if isinstance(name, str) else None

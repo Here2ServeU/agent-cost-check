@@ -1,7 +1,6 @@
 """python3 -m costcheck <report|card|check|demo|reset>"""
 from __future__ import annotations
 
-import json
 import random
 import sys
 import time
@@ -9,7 +8,7 @@ import time
 from . import run
 from .readiness import ask, render as render_readiness
 from .report import render_card, render_report, summarize
-from .store import DIR, reset
+from .store import load_readiness, reset, save_readiness
 
 HELP = """
   costcheck; what your agent actually costs
@@ -60,20 +59,11 @@ def main(argv: list[str]) -> int:
     elif cmd == "report":
         print(render_report(summarize()))
     elif cmd == "card":
-        s = summarize()
-        score = None
-        f = DIR / "readiness.json"
-        if f.exists():
-            d = json.loads(f.read_text())
-            score = (d["score"], d["gaps"])
-        print()
-        print(render_card(s, score))
-        print()
+        print("\n" + render_card(summarize(), load_readiness()) + "\n")
     elif cmd == "check":
         score, gaps = ask()
         print(render_readiness(score, gaps))
-        DIR.mkdir(parents=True, exist_ok=True)
-        (DIR / "readiness.json").write_text(json.dumps({"score": score, "gaps": gaps}))
+        save_readiness(score, gaps)
         s = summarize()
         if s["runs"] and score < 6:
             print(f"  Your overnight exposure, from your own runs: \033[91m${s['overnight']:,.2f}\033[0m")

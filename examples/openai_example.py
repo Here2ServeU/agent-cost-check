@@ -5,7 +5,7 @@ import costcheck
 # from openai import OpenAI; client = OpenAI()
 
 def summarize_ticket(client, ticket: str) -> str | None:
-    with costcheck.run(task="support-summary", model="gpt-4o", team="support") as r:
+    with costcheck.run(task="support-summary") as r:
         resp = client.chat.completions.create(
             model="gpt-4o",
             messages=[{"role": "user", "content": f"Summarise: {ticket}"}],

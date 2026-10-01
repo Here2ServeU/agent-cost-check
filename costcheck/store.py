@@ -11,21 +11,27 @@ import time
 from pathlib import Path
 from typing import Any
 
-DIR = Path(os.environ.get("COSTCHECK_DIR", ".costcheck"))
-LEDGER = DIR / "runs.jsonl"
+
+def folder() -> Path:
+    """Where everything lives. Set COSTCHECK_DIR to put it somewhere else."""
+    return Path(os.environ.get("COSTCHECK_DIR", ".costcheck"))
+
+
+def _ledger() -> Path:
+    return folder() / "runs.jsonl"
 
 
 def append(record: dict[str, Any]) -> None:
-    DIR.mkdir(parents=True, exist_ok=True)
-    with LEDGER.open("a") as f:
+    folder().mkdir(parents=True, exist_ok=True)
+    with _ledger().open("a") as f:
         f.write(json.dumps({"ts": time.time(), **record}) + "\n")
 
 
 def read_all() -> list[dict[str, Any]]:
-    if not LEDGER.exists():
+    if not _ledger().exists():
         return []
     out = []
-    for line in LEDGER.read_text().splitlines():
+    for line in _ledger().read_text().splitlines():
         line = line.strip()
         if line:
             try:
@@ -37,6 +43,18 @@ def read_all() -> list[dict[str, Any]]:
 
 def reset() -> int:
     n = len(read_all())
-    if LEDGER.exists():
-        LEDGER.unlink()
+    _ledger().unlink(missing_ok=True)
     return n
+
+
+def save_readiness(score: int, gaps: list[str]) -> None:
+    folder().mkdir(parents=True, exist_ok=True)
+    (folder() / "readiness.json").write_text(json.dumps({"score": score, "gaps": gaps}))
+
+
+def load_readiness() -> tuple[int, list[str]] | None:
+    f = folder() / "readiness.json"
+    if not f.exists():
+        return None
+    d = json.loads(f.read_text())
+    return d["score"], d["gaps"]
