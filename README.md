@@ -28,6 +28,13 @@ You need Python 3.9 or newer and git. Don't have them?
 - **Mac:** run `xcode-select --install` (gives you git and Python), or get Python from [python.org](https://www.python.org/downloads/).
 - **Windows:** install Python from [python.org](https://www.python.org/downloads/) and tick **"Add python.exe to PATH"** during setup. Install git from [git-scm.com](https://git-scm.com/download/win). Close and reopen PowerShell afterwards.
 
+**Prefer to watch?** These step-by-step videos install Python, Git and Visual Studio Code from scratch:
+
+| Mac | Windows |
+|---|---|
+| [![How to install Git, Python and Visual Studio Code on Mac](https://img.youtube.com/vi/8ZIiXg4XOY0/mqdefault.jpg)](https://www.youtube.com/watch?v=8ZIiXg4XOY0) | [![How to install Git, Python and Visual Studio Code on Windows](https://img.youtube.com/vi/f091sbQSv7I/mqdefault.jpg)](https://www.youtube.com/watch?v=f091sbQSv7I) |
+| [Watch the Mac video](https://www.youtube.com/watch?v=8ZIiXg4XOY0) | [Watch the Windows video](https://www.youtube.com/watch?v=f091sbQSv7I) |
+
 > **Windows rule of thumb:** wherever this README says `python3`, type `py` instead. Everything else is the same.
 
 ---
