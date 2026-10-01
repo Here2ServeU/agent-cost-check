@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "costcheck"
+version = "1.0.0"
+description = "Find out what your AI agent actually costs, including the runs that failed."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Emmanuel Naweji" }]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Here2ServeU/agent-cost-check"
+
+[tool.setuptools]
+packages = ["costcheck"]

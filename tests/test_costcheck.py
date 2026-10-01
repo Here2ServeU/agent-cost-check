@@ -13,9 +13,6 @@ class Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
         os.environ["COSTCHECK_DIR"] = os.path.join(self.tmp, ".costcheck")
-        for m in ("costcheck", "costcheck.store", "costcheck.report"):
-            import sys
-            sys.modules.pop(m, None)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
@@ -93,6 +90,24 @@ class TestRun(Base):
         self.assertEqual(row["result"], "failure")
         self.assertGreater(row["cost_usd"], 0)
         self.assertIn("boom", row["reason"])
+
+    def test_model_is_read_from_the_response(self):
+        import costcheck
+        from costcheck.store import read_all
+        with costcheck.run(task="t") as r:
+            r.record({"model": "gpt-4o-mini-2024-07-18",
+                      "usage": {"prompt_tokens": 1_000_000, "completion_tokens": 0}})
+            r.succeeded()
+        row = read_all()[0]
+        self.assertEqual(row["model"], "gpt-4o-mini-2024-07-18")
+        self.assertAlmostEqual(row["cost_usd"], 0.15)      # gpt-4o-mini, not sonnet
+
+    def test_model_you_pass_wins(self):
+        import costcheck
+        from costcheck.store import read_all
+        with costcheck.run(task="t", model="claude-opus") as r:
+            r.record({"model": "gpt-4o", "usage": {"input_tokens": 1_000_000, "output_tokens": 0}})
+        self.assertAlmostEqual(read_all()[0]["cost_usd"], 15.0)
 
 
 class TestSummary(Base):

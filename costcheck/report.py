@@ -6,7 +6,7 @@ from typing import Any
 
 from .store import read_all
 
-WAITLIST = "https://github.com/Here2ServeU/agent-cost-control"   # replace with your waitlist URL
+WAITLIST = "https://www.transformed2succeed.com/waitlist"
 
 G, Y, R, D, B, OFF = "\033[92m", "\033[93m", "\033[91m", "\033[2m", "\033[1m", "\033[0m"
 

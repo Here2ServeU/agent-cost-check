@@ -27,7 +27,7 @@ from typing import Any, Iterator
 
 from .prices import cost_usd
 from .store import append
-from .usage import extract
+from .usage import extract, model_name
 
 __version__ = "1.0.0"
 __all__ = ["run", "Run", "__version__"]
@@ -43,7 +43,7 @@ class Run:
     finished piece of work costs, not what a step costs.
     """
 
-    def __init__(self, task: str, model: str, agent: str, team: str) -> None:
+    def __init__(self, task: str, model: str | None, agent: str, team: str) -> None:
         self.id = uuid.uuid4().hex[:8]
         self.task, self.model, self.agent, self.team = task, model, agent, team
         self.steps = 0
@@ -61,7 +61,10 @@ class Run:
         """Record one model call. Pass the response, or the two numbers."""
         if input_tokens is None or output_tokens is None:
             input_tokens, output_tokens = extract(response)
-        m = model or self.model
+        # No model given? Use the one the response names, so a GPT run is not
+        # priced as Claude just because nobody passed model=.
+        m = model or self.model or model_name(response) or DEFAULT_MODEL
+        self.model = self.model or m
         usd, exact = cost_usd(m, input_tokens, output_tokens)
         self.steps += 1
         self.input_tokens += input_tokens
@@ -94,7 +97,7 @@ def run(task: str = "task", *, model: str | None = None,
     money it spent before raising still counts, and it counts on the top
     of the fraction, not the bottom.
     """
-    r = Run(task, model or DEFAULT_MODEL, agent, team)
+    r = Run(task, model, agent, team)
     try:
         yield r
     except BaseException as e:                      # noqa: BLE001
@@ -108,7 +111,7 @@ def run(task: str = "task", *, model: str | None = None,
             r.result, r.reason = "failure", r.reason or "succeeded() was never called"
         append({
             "run_id": r.id, "task": r.task, "agent": r.agent, "team": r.team,
-            "model": r.model, "priced_exactly": r.priced_exactly,
+            "model": r.model or DEFAULT_MODEL, "priced_exactly": r.priced_exactly,
             "result": r.result, "reason": r.reason, "steps": r.steps,
             "input_tokens": r.input_tokens, "output_tokens": r.output_tokens,
             "cost_usd": round(r.cost_usd, 8),
