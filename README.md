@@ -154,6 +154,46 @@ hundred lines.
 
 ---
 
+## What's in this repo
+
+### `costcheck/`: the tool itself
+
+You only ever use `costcheck.run()`, `r.record()` and `r.succeeded()`. The
+rest is here if you want to see how it works.
+
+| File | What it does |
+|---|---|
+| [`__init__.py`](costcheck/__init__.py) | `costcheck.run()` and the `r` object: `record()`, `succeeded()`, `failed()`. Saves one line per task when the `with` block ends. |
+| [`usage.py`](costcheck/usage.py) | Finds the token counts and model name in a response, whether it came from Anthropic, OpenAI, Gemini or a plain dict. |
+| [`prices.py`](costcheck/prices.py) | The price table, in dollars per million tokens. **Edit this file when prices change** or to add your model. |
+| [`store.py`](costcheck/store.py) | Reads and writes `.costcheck/runs.jsonl`, the file all your results go into. |
+| [`report.py`](costcheck/report.py) | Turns the saved runs into the three numbers, the report and the shareable card. |
+| [`readiness.py`](costcheck/readiness.py) | The six yes/no questions behind `python3 -m costcheck check`. |
+| [`__main__.py`](costcheck/__main__.py) | The commands: `demo`, `report`, `check`, `card`, `reset`. |
+
+### `examples/`: start here if you learn by reading code
+
+| File | What it shows | API key? |
+|---|---|---|
+| [`start_here.py`](examples/start_here.py) | The basics, every line explained. One task that works, one that fails. **Run this first.** | No |
+| [`anthropic_example.py`](examples/anthropic_example.py) | costcheck inside an agent loop that calls Claude several times per task. | Only to run it for real |
+| [`openai_example.py`](examples/openai_example.py) | The same pattern with OpenAI. Only the client code changes. | Only to run it for real |
+
+The two API examples are meant to be read and copied from. To run them for
+real, install the SDK (`pip install anthropic` or `pip install openai`) and set
+your key with `export ANTHROPIC_API_KEY=...` or `export OPENAI_API_KEY=...`.
+costcheck itself never needs a key.
+
+### Everything else
+
+| File | What it is |
+|---|---|
+| [`tests/`](tests/test_costcheck.py) | Checks that the arithmetic is right. Run with `python3 -m unittest discover -s tests`. |
+| [`pyproject.toml`](pyproject.toml) | Lets `pip install` work. |
+| [`.github/workflows/tests.yml`](.github/workflows/tests.yml) | Runs the tests on GitHub every time code is pushed. |
+
+---
+
 ## Your data
 
 Everything goes into `.costcheck/runs.jsonl` in the folder you run from, one
