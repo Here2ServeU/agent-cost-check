@@ -13,9 +13,13 @@ computer.
 
 **New here? Watch the video guide first.** It explains what costcheck measures and walks through it step by step:
 
-[![What Does Your AI Agent Really Cost? (Including the Runs That Fail)](https://img.youtube.com/vi/lo_YUtlCzPs/hqdefault.jpg)](https://youtu.be/lo_YUtlCzPs)
-
-[Watch the costcheck video guide on YouTube](https://youtu.be/lo_YUtlCzPs)
+<p align="center">
+  <a href="https://youtu.be/lo_YUtlCzPs">
+    <img src="https://img.youtube.com/vi/lo_YUtlCzPs/hqdefault.jpg" alt="What Does Your AI Agent Really Cost? (Including the Runs That Fail)" width="560">
+  </a>
+  <br>
+  <a href="https://youtu.be/lo_YUtlCzPs">Watch the costcheck video guide on YouTube</a>
+</p>
 
 ---
 
