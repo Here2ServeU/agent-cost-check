@@ -13,7 +13,28 @@ computer.
 
 ---
 
+## Before you start: Mac or Windows?
+
+Every command in this README runs in a terminal. Open one like this:
+
+| | Mac | Windows |
+|---|---|---|
+| Open a terminal | Press `Cmd + Space`, type **Terminal**, press Enter | Press the Windows key, type **PowerShell**, press Enter |
+| Run Python | `python3` | `py` (if that's not found, try `python`) |
+| Check Python is ready | `python3 --version` | `py --version` |
+
+You need Python 3.9 or newer and git. Don't have them?
+
+- **Mac:** run `xcode-select --install` (gives you git and Python), or get Python from [python.org](https://www.python.org/downloads/).
+- **Windows:** install Python from [python.org](https://www.python.org/downloads/) and tick **"Add python.exe to PATH"** during setup. Install git from [git-scm.com](https://git-scm.com/download/win). Close and reopen PowerShell afterwards.
+
+> **Windows rule of thumb:** wherever this README says `python3`, type `py` instead. Everything else is the same.
+
+---
+
 ## Step 1: See it work (30 seconds, no API key)
+
+**Mac:**
 
 ```bash
 git clone https://github.com/Here2ServeU/agent-cost-check
@@ -22,17 +43,50 @@ python3 -m costcheck demo
 python3 -m costcheck report
 ```
 
+**Windows (PowerShell):**
+
+```powershell
+git clone https://github.com/Here2ServeU/agent-cost-check
+cd agent-cost-check
+py -m costcheck demo
+py -m costcheck report
+```
+
 This uses fake data, so you can see the report before touching your own code.
 
 ---
 
-## Step 2: Install it in your project
+## Step 2: Add it to your project
+
+costcheck is plain Python with zero dependencies, so it doesn't need installing. You already cloned it in Step 1. From inside the `agent-cost-check` folder, copy the `costcheck` folder into your project:
+
+**Mac:**
 
 ```bash
-pip install git+https://github.com/Here2ServeU/agent-cost-check
+cp -r costcheck /path/to/your-project/
 ```
 
-Needs Python 3.9 or newer. Nothing else gets installed.
+**Windows (PowerShell):**
+
+```powershell
+Copy-Item -Recurse costcheck C:\path\to\your-project\
+```
+
+Replace the path with your own project folder. That's it. From your project folder, `import costcheck` works and `python3 -m costcheck report` (`py -m costcheck report` on Windows) works. No pip involved.
+
+**Prefer pip?** Use `python3 -m pip` (Mac) or `py -m pip` (Windows), not plain `pip`:
+
+```bash
+# Mac
+python3 -m pip install git+https://github.com/Here2ServeU/agent-cost-check
+
+# Windows
+py -m pip install git+https://github.com/Here2ServeU/agent-cost-check
+```
+
+This asks Python to run its own pip instead of hoping a `pip` command exists on your `PATH`. It also installs into the same Python you'll run your agent with, which avoids the classic "install succeeded but `import` fails" problem when two Pythons are on your machine.
+
+> On a Mac, if you see `error: externally-managed-environment` (common with Homebrew Python), skip pip and use the copy method above. Or install inside a virtual environment if you already use one.
 
 ---
 
@@ -180,8 +234,11 @@ rest is here if you want to see how it works.
 | [`openai_example.py`](examples/openai_example.py) | The same pattern with OpenAI. Only the client code changes. | Only to run it for real |
 
 The two API examples are meant to be read and copied from. To run them for
-real, install the SDK (`pip install anthropic` or `pip install openai`) and set
-your key with `export ANTHROPIC_API_KEY=...` or `export OPENAI_API_KEY=...`.
+real, install the SDK and set your key:
+
+- **Mac:** `python3 -m pip install anthropic` (or `openai`), then `export ANTHROPIC_API_KEY=...` (or `export OPENAI_API_KEY=...`)
+- **Windows (PowerShell):** `py -m pip install anthropic` (or `openai`), then `$env:ANTHROPIC_API_KEY="..."` (or `$env:OPENAI_API_KEY="..."`)
+
 costcheck itself never needs a key.
 
 ### Everything else
