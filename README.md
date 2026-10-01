@@ -257,6 +257,71 @@ Everything goes into `.costcheck/runs.jsonl` in the folder you run from, one
 line per task. No server, no network calls, no telemetry. Open the file and
 read it. Add `.costcheck/` to your `.gitignore` if you don't want it committed.
 
+## Cleanup
+
+Done trying it out, or want a fresh start? Pick what you need. Run each command
+from the folder named in the step.
+
+**1. Clear your results, keep the tool.** From the folder you ran your agent in:
+
+```bash
+# Mac
+python3 -m costcheck reset
+
+# Windows (PowerShell)
+py -m costcheck reset
+```
+
+This deletes `.costcheck/runs.jsonl`, including the fake runs from `demo`.
+Your next report starts from zero.
+
+**2. Remove the data folder too.** `reset` empties your results; this removes
+the folder itself:
+
+```bash
+# Mac
+rm -rf .costcheck
+
+# Windows (PowerShell)
+Remove-Item -Recurse -Force .costcheck
+```
+
+**3. Take costcheck out of your project.** Delete the three lines from Step 3
+(`import costcheck`, the `with costcheck.run(...)` line, and `r.record` /
+`r.succeeded`), move your code back out of the `with` block, then:
+
+- **If you copied the folder:** from your project folder, run `rm -rf costcheck`
+  (Mac) or `Remove-Item -Recurse -Force costcheck` (Windows).
+- **If you used pip:** run `python3 -m pip uninstall costcheck` (Mac) or
+  `py -m pip uninstall costcheck` (Windows).
+
+**4. Delete the cloned repo.** From inside `agent-cost-check`, go up one folder
+with `cd ..`, then delete it:
+
+```bash
+# Mac
+cd ..
+rm -rf agent-cost-check
+
+# Windows (PowerShell)
+cd ..
+Remove-Item -Recurse -Force agent-cost-check
+```
+
+**5. Clear any API keys you set for the examples.** Keys set with `export` or
+`$env:` only last until you close the terminal. To clear them now:
+
+```bash
+# Mac
+unset ANTHROPIC_API_KEY OPENAI_API_KEY
+
+# Windows (PowerShell)
+Remove-Item Env:ANTHROPIC_API_KEY, Env:OPENAI_API_KEY -ErrorAction SilentlyContinue
+```
+
+That's everything. costcheck never installs anything system-wide or sends data
+anywhere, so there is nothing else to remove.
+
 ## Tests
 
 ```bash
